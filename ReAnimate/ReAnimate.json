@@ -1,0 +1,19 @@
+{
+  "Name": "ReAnimate",
+  "Author": "Nyaughty",
+  "Punchline": "Poses are like onions--- err wrong notebook",
+  "Description": "Turn your current pose into an idle pose with a single click in no time.",
+  "InternalName": "ReAnimate",
+  "AssemblyVersion": "1.2.1.0",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://plogon.nyaughty.com",
+  "IconUrl": "https://plogon.nyaughty.com/reanimate.png",
+  "Tags": [
+    "penumbra",
+    "pose",
+    "idle",
+    "animation",
+    "brio"
+  ],
+  "DalamudApiLevel": 15
+}

@@ -1,0 +1,7 @@
+bin/
+obj/
+*.user
+.vs/
+refs/
+release/
+NOTES.md

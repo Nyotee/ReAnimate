@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ReAnimateChecks</AssemblyName>
+    <RootNamespace>ReAnimate.Checks</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Links the plugin's dependency-free sources so the same code is what gets tested. -->
+  <ItemGroup>
+    <Compile Include="..\..\ReAnimate\Formats\PapFile.cs" Link="PapFile.cs" />
+    <Compile Include="..\..\ReAnimate\Formats\SklbFile.cs" Link="SklbFile.cs" />
+    <Compile Include="..\..\ReAnimate\Bake\BakeMath.cs" Link="BakeMath.cs" />
+    <Compile Include="..\..\ReAnimate\Formats\TmbFile.cs" Link="TmbFile.cs" />
+    <Compile Include="..\..\ReAnimate\Formats\PapRetarget.cs" Link="PapRetarget.cs" />
+  </ItemGroup>
+
+</Project>
