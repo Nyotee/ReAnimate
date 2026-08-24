@@ -4,7 +4,7 @@
   "Punchline": "Poses are like onions--- err wrong notebook",
   "Description": "Turn your current pose into an idle pose with a single click in no time.",
   "InternalName": "ReAnimate",
-  "AssemblyVersion": "1.2.1.0",
+  "AssemblyVersion": "1.2.1.1",
   "ApplicableVersion": "any",
   "RepoUrl": "https://plogon.nyaughty.com",
   "IconUrl": "https://plogon.nyaughty.com/reanimate.png",

@@ -42,6 +42,9 @@ public sealed class MainWindow : Window
     private readonly Dictionary<int, AnimTarget> targetChoice = [];
     private readonly Dictionary<string, AnimationCatalog.AnimFlags?> flagCache = new(StringComparer.OrdinalIgnoreCase);
     private string targetFilter = "";
+    private bool selectedUnified;
+    private (ModAnim Anim, AnimTarget Target)? pendingSwap;
+    private bool openConfirm;
 
     public MainWindow(Plugin plugin) : base("ReAnimate###ReAnimateMain")
     {
@@ -333,6 +336,8 @@ public sealed class MainWindow : Window
         targetChoice.Clear();
         var root = plugin.Penumbra.ModDirectory;
         paps = root is null ? [] : ModScanner.Group(ModScanner.Scan(root, dir));
+        selectedUnified = root is not null && ModWriter.IsUnifiedMeta(root, dir);
+        pendingSwap = null;
         flagCache.Clear();
         RefreshSwaps();
     }
@@ -343,6 +348,21 @@ public sealed class MainWindow : Window
     {
         var root = plugin.Penumbra.ModDirectory;
         swaps = root is null || selectedMod is null ? [] : SwapService.ExistingSwaps(plugin, root, selectedMod, SelectedModName);
+    }
+
+    // The one placement that rewrites the mod's own redirects instead of adding an option
+    // (older mod layouts get a sibling mod, which stays toggleable either way).
+    private bool Destructive => !plugin.Config.SwapAsOption && selectedUnified;
+
+    private void ApplySwap(ModAnim anim, AnimTarget target)
+    {
+        var rewritten = Destructive;
+        SwapService.Apply(plugin, selectedMod!, SelectedModName, anim, target);
+        // a rewrite changed what the mod replaces, so the list has to be read again
+        if (rewritten)
+            SelectMod(selectedMod!);
+        else
+            RefreshSwaps();
     }
 
     private void DrawSwapTab(bool penumbraOk)
@@ -395,7 +415,9 @@ public sealed class MainWindow : Window
         }
 
         if (ImGui.IsItemHovered())
-            ImGui.SetTooltip("On: a \"ReAnimate swaps\" option inside the mod, toggle it in Penumbra.\nOff: the mod's own paths are rewritten in place.");
+            ImGui.SetTooltip("On: the swap is an option inside the mod, untick it in Penumbra whenever.\nOff: the mod's own paths are rewritten, which cannot be undone.");
+        if (Destructive)
+            ImGui.TextColored(ColBad, "Swaps rewrite this mod for good and cannot be undone.");
         if (selectedMod is null)
         {
             ImGui.TextColored(ColDim, "Pick a mod to see the animations it replaces.");
@@ -462,8 +484,10 @@ public sealed class MainWindow : Window
             // no chat line for swaps: the row's "now plays as" is the feedback
             if (ImGui.Button("Swap"))
             {
-                SwapService.Apply(plugin, selectedMod!, SelectedModName, pap, chosenTarget!);
-                RefreshSwaps();
+                if (Destructive)
+                    (pendingSwap, openConfirm) = ((pap, chosenTarget!), true);
+                else
+                    ApplySwap(pap, chosenTarget!);
             }
             ImGui.EndDisabled();
 
@@ -471,5 +495,47 @@ public sealed class MainWindow : Window
         }
 
         ImGui.EndTable();
+        DrawSwapConfirm();
+    }
+
+    // Rewriting someone's installed mod cannot be taken back, so it asks first.
+    private void DrawSwapConfirm()
+    {
+        if (pendingSwap is not { } pending)
+            return;
+
+        // opened once, never per frame, or Escape would just reopen it
+        if (openConfirm)
+        {
+            ImGui.OpenPopup("###confirmswap");
+            openConfirm = false;
+        }
+
+        var open = true;
+        ImGui.SetNextWindowSize(new Vector2(440, 0)); // height 0 = fit the text, width wraps it
+        if (!ImGui.BeginPopupModal("Heads up###confirmswap", ref open, ImGuiWindowFlags.None))
+        {
+            pendingSwap = null;
+            return;
+        }
+
+        ImGui.TextColored(ColBad, "This cannot be undone.");
+        ImGui.TextWrapped($"\"Add as a mod option\" is off, so {SelectedModName} gets rewritten: {pending.Anim.Display} stops playing where it does now and plays as {pending.Target.Name} instead. Getting it back means reinstalling the mod.");
+        ImGui.Spacing();
+        if (ImGui.Button("Rewrite the mod", new Vector2(150, 0)))
+        {
+            ApplySwap(pending.Anim, pending.Target);
+            pendingSwap = null;
+            ImGui.CloseCurrentPopup();
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Cancel", new Vector2(100, 0)))
+        {
+            pendingSwap = null;
+            ImGui.CloseCurrentPopup();
+        }
+
+        ImGui.EndPopup();
     }
 }
