@@ -18,6 +18,7 @@ public sealed class MainWindow : Window
     private static readonly Vector4 ColGood = new(0.45f, 0.9f, 0.45f, 1f);
     private static readonly Vector4 ColBad = new(0.9f, 0.35f, 0.35f, 1f);
     private static readonly Vector4 ColDim = new(0.6f, 0.6f, 0.6f, 1f);
+    private static readonly Vector4 ColWarn = new(0.95f, 0.8f, 0.3f, 1f);
 
     private readonly Plugin plugin;
 
@@ -373,6 +374,13 @@ public sealed class MainWindow : Window
             return;
         }
 
+        // the question everyone asks: where did my swap go, and how do I take it back
+        if (Destructive)
+            ImGui.TextColored(ColBad, "Swaps rewrite the mod you pick. That cannot be undone.");
+        else
+            ImGui.TextColored(ColWarn, "Swaps go into the mod you pick, as a toggle. Untick it in Penumbra to undo.");
+        ImGui.Separator();
+
         PollScan();
 
         // left: installed mods that carry animations
@@ -416,8 +424,6 @@ public sealed class MainWindow : Window
 
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip("On: the swap is an option inside the mod, untick it in Penumbra whenever.\nOff: the mod's own paths are rewritten, which cannot be undone.");
-        if (Destructive)
-            ImGui.TextColored(ColBad, "Swaps rewrite this mod for good and cannot be undone.");
         if (selectedMod is null)
         {
             ImGui.TextColored(ColDim, "Pick a mod to see the animations it replaces.");
@@ -481,7 +487,6 @@ public sealed class MainWindow : Window
 
             ImGui.TableNextColumn();
             ImGui.BeginDisabled(!pap.Exists || chosenTarget is null);
-            // no chat line for swaps: the row's "now plays as" is the feedback
             if (ImGui.Button("Swap"))
             {
                 if (Destructive)

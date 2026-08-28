@@ -35,8 +35,9 @@ public static class ModWriter
     // their group_*.json files and get a sibling mod instead.
     public static bool IsUnifiedMeta(string modRoot, string modDir)
     {
+        // a missing Groups key is normal: Penumbra omits it for a mod with no option groups
         var meta = ModMeta.Parse(Path.Combine(modRoot, modDir, "meta.json"));
-        return meta is not null && (meta["FileVersion"]?.Value<int>() ?? 0) >= 4 && meta["Groups"] is JArray;
+        return meta is not null && (meta["FileVersion"]?.Value<int>() ?? 0) >= 4;
     }
 
     // Writes the paps, upserts the option, sweeps orphans. Paths in `bakes` may share a

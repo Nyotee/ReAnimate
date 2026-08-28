@@ -83,6 +83,7 @@ public static class SwapService
         {
             plugin.Penumbra.ReloadMod(sourceModDir);
             plugin.Penumbra.RedrawPlayer();
+            Plugin.Print($"{sourceModName} now plays {anim.Display} as {target.Name}.");
             return;
         }
 
@@ -90,6 +91,7 @@ public static class SwapService
         {
             ModWriter.WriteOption(modRoot, sourceModDir, sourceModName, SwapGroup, optionName, bakes, SwapGroupPriority);
             BakeService.Publish(plugin, sourceModDir, isNew: false, SwapGroup, optionName);
+            Plugin.Print($"Added \"{optionName}\" to {sourceModName}. Turn it off in Penumbra whenever.");
             return;
         }
 
@@ -98,6 +100,7 @@ public static class SwapService
         var isNew = !plugin.Penumbra.KnowsMod(sibling);
         ModWriter.WriteOption(modRoot, sibling, sibling, SwapGroup, optionName, bakes, SwapGroupPriority);
         BakeService.Publish(plugin, sibling, isNew, SwapGroup, optionName);
+        Plugin.Print($"Added \"{optionName}\" as a new mod, \"{sibling}\". Turn it off in Penumbra whenever.");
     }
 
     private static string SiblingDir(string sourceModName)

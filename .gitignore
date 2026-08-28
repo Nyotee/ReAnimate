@@ -5,3 +5,7 @@ obj/
 refs/
 release/
 NOTES.md
+
+# the shipped icon only: sources and banners stay local
+icon/*
+!icon/reanimate.png

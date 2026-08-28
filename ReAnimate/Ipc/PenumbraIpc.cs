@@ -48,6 +48,9 @@ public sealed class PenumbraIpc(IDalamudPluginInterface pi, IPluginLog log)
     private readonly ICallGateSubscriber<Dictionary<string, string>> getModList =
         pi.GetIpcSubscriber<Dictionary<string, string>>("Penumbra.GetModList");
 
+    private readonly ICallGateSubscriber<Dictionary<Guid, string>> getCollections =
+        pi.GetIpcSubscriber<Dictionary<Guid, string>>("Penumbra.GetCollections.V5");
+
     private ICallGateSubscriber<string, string, object?>? modMovedHook;
     private Action<string, string>? modMovedCallback;
 
@@ -254,24 +257,18 @@ public sealed class PenumbraIpc(IDalamudPluginInterface pi, IPluginLog log)
         }
     }
 
-    // Every collection (id -> name); empty when Penumbra cannot answer. Tried under both
-    // labels: .V5 is current, but one field build registered only the bare name.
+    // Every collection (id -> name); empty when Penumbra cannot answer.
     public Dictionary<Guid, string> Collections()
     {
-        foreach (var label in new[] { "Penumbra.GetCollections.V5", "Penumbra.GetCollections" })
+        try
         {
-            try
-            {
-                if (pi.GetIpcSubscriber<Dictionary<Guid, string>>(label).InvokeFunc() is { } result)
-                    return result;
-            }
-            catch
-            {
-            }
+            return getCollections.InvokeFunc() ?? [];
         }
-
-        log.Warning("Penumbra.GetCollections unavailable under either label.");
-        return [];
+        catch (Exception ex)
+        {
+            log.Warning($"Penumbra.GetCollections failed: {ex.Message}");
+            return [];
+        }
     }
 
     // Mods are identified by directory NAME in all of Penumbra's IPC (the meta GUID is
