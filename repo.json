@@ -1,0 +1,55 @@
+[
+  {
+    "Author": "Nyaughty",
+    "Name": "Onion",
+    "InternalName": "Onion",
+    "Punchline": "Mods are like onions, they have layers!",
+    "Description": "Install skin mods as layers and not as skin replacements. Designed to work across female bodies, works with OMP files and Proteus mods.",
+    "AssemblyVersion": "1.2.0.0",
+    "TestingAssemblyVersion": "1.2.0.0",
+    "RepoUrl": "https://plogon.nyaughty.com",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 15,
+    "TestingDalamudApiLevel": 15,
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "IconUrl": "https://plogon.nyaughty.com/icon.png",
+    "Tags": [
+      "skin",
+      "overlay",
+      "penumbra",
+      "body",
+      "textures"
+    ],
+    "LastUpdate": 1787914096,
+    "DownloadLinkInstall": "https://plogon.nyaughty.com/Onion.zip",
+    "DownloadLinkTesting": "https://plogon.nyaughty.com/Onion-testing.zip",
+    "DownloadLinkUpdate": "https://plogon.nyaughty.com/Onion.zip",
+    "Changelog": "- TBSE actually works now!\n- Files with funny characters like \u00e2\u2122\u00a5 hearts should also work properly now.\n- Added a toggle in the settings (DEFAULT OFF) to enable linking with Nyaughty's Toolbox addon - if you don't know what that is just leave it off."
+  },
+  {
+    "Author": "Nyaughty",
+    "Name": "ReAnimate",
+    "InternalName": "ReAnimate",
+    "Punchline": "Poses are like onions--- err wrong notebook",
+    "Description": "Turn your current pose into an idle pose with a single click in no time.",
+    "AssemblyVersion": "1.2.2.0",
+    "RepoUrl": "https://plogon.nyaughty.com",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 15,
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "IconUrl": "https://plogon.nyaughty.com/reanimate.png",
+    "Tags": [
+      "penumbra",
+      "pose",
+      "idle",
+      "animation",
+      "brio"
+    ],
+    "LastUpdate": 1787960166,
+    "DownloadLinkInstall": "https://plogon.nyaughty.com/ReAnimate.zip",
+    "DownloadLinkUpdate": "https://plogon.nyaughty.com/ReAnimate.zip",
+    "Changelog": "- New icon\r\n- The swap tab tells you where swaps land and how to undo one\r\n- A swap now says which mod it went into\r\n- Fixed: swapping into a mod with no option groups made a separate mod instead of going inside it"
+  }
+]

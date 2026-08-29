@@ -21,6 +21,9 @@ https://plogon.nyaughty.com
 Then install ReAnimate from `/xlplugins`. Penumbra is required, the saves land there as
 regular mods you can toggle or delete like any other.
 
+The `repo.json` in this repo exists so plugin indexers can find my plugins (ReAnimate and
+Onion). The link above is the actual plugin repository and is always current.
+
 ## Use
 
 - `/reanimate` opens the window. Idle2Pose tab: pick race, pose type and slot (they
