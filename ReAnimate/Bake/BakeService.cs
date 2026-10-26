@@ -121,10 +121,19 @@ public static class BakeService
         plugin.Config.Save();
 
         Publish(plugin, plugin.Config.ModDirectory, isNew, groupName, optionName);
+        // AddMod reports success whenever the folder exists, so ask whether Penumbra really loaded it
+        if (!plugin.Penumbra.KnowsMod(plugin.Config.ModDirectory))
+        {
+            Plugin.Print($"Saved {groupName} {optionName}, but Penumbra did not load the mod. Click Rediscover Mods in Penumbra's settings.");
+            return;
+        }
+
+        // the name Penumbra lists it under, renames included
+        var modName = ModMeta.Parse(Path.Combine(modRoot, plugin.Config.ModDirectory, "meta.json"))?["Name"]?.ToString() ?? plugin.Config.ModDirectory;
         var basis = basedOn.Count > 0 ? $" over {string.Join(", ", basedOn)}" : "";
         var custom = customBones.Count > 0 ? $", +{customBones.Count} custom bone{(customBones.Count == 1 ? "" : "s")}" : "";
         Plugin.Log.Debug($"ground shift {groundShift:F4} m ({grounding})");
-        Plugin.Print($"Saved {groupName} {optionName}{basis}{custom}.");
+        Plugin.Print($"Saved {groupName} {optionName} in {modName}{basis}{custom}.");
     }
 
     private static SkeletonSource? LoadSklb(ushort race)
